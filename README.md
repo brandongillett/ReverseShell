@@ -18,7 +18,7 @@
 
 <p align="center"> (Education purpose only) This is a project that I personally found interesting to demonstrate use of sockets and multiple threading and subprocess methods in python. 
     <br> 
-Insperation/Credit : <p href="https://github.com/malwaredllc/byob">BYOB (Build Your Own Botnet)</p>
+Insperation/Credit : <a href="https://github.com/malwaredllc/byob">BYOB (Build Your Own Botnet)</a>
 </p>
 
 ## 📝 Table of Contents
