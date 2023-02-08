@@ -91,3 +91,4 @@ Add additional notes about how to deploy this on a live system.
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 - [@byob](https://github.com/malwaredllc/byob) - much credit to this repo and @malwaredllc for the inspiration behind this project
+- [@The-Documentation-Compendium](https://github.com/kylelobo/The-Documentation-Compendium) - Documentation behind the README
