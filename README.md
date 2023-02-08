@@ -7,8 +7,7 @@
 <div align="center">
 
   [![Status](https://img.shields.io/badge/status-active-success.svg)]() 
-  [![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
-  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
+  [![GitHub Issues](https://img.shields.io/bitbucket/issues/brandongillett/ReverseShel?style=social)
   [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
 
 </div>
@@ -34,31 +33,33 @@ Inspiration/Credit : <a href="https://github.com/malwaredllc/byob">BYOB (Build Y
 ## 🧐 About <a name = "about"></a>
 The purpose of this project is to help junior developers understand sockets in a fun way that they could have possibly learned in cyber security classes(such as i did). The use of threading and subprocesses is something that is demonstrated here as well which makes this a great introduction to cyber security/operating systems for many developers looking to get educated in these fields. Also with many features for the host such as informations on existing clients also demonstrates the use of databases in SQLite.
 ## 🏁 Getting Started <a name = "getting_started"></a>
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
+All you will need to get started is an updated versaion of python3 and Ubuntu/Kali Linux.
+
+Installing python3 (linux)
+
+```
+sudo apt update
+
+sudo apt install python3
+```
 
 ### Prerequisites
-What things you need to install the software and how to install them.
-
-```
-Give examples
-```
+None at the moment. (As newer versions get released requirements.txt might be in place).
 
 ### Installing
-A step by step series of examples that tell you how to get a development env running.
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
+After downloading the repository to get this running you do not need much as for the client script is currently hard coded and will be implemented for users to create custom scripts.  
+Just run the rshell.py with python3 with admin priveledges.
 
 ```
-until finished
+sudo python3 rshell.py
 ```
 
-End with an example of getting some data out of the system or using it for a little demo.
+From here the host side is all setup, we just need to run the client.py on the clients computer.
+
+```
+sudo python3 client.py
+```
+
 
 ## 🔧 Running the tests <a name = "tests"></a>
 Explain how to run the automated tests for this system.
@@ -90,11 +91,7 @@ Add additional notes about how to deploy this on a live system.
 - [NodeJs](https://nodejs.org/en/) - Server Environment
 
 ## ✍️ Authors <a name = "authors"></a>
-- [@kylelobo](https://github.com/kylelobo) - Idea & Initial work
-
-See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
+- [@brandongillett](https://github.com/brandongillett)
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
-- Hat tip to anyone whose code was used
-- Inspiration
-- References
+- [@byob](https://github.com/malwaredllc/byob) - much credit to this repo and @malwaredllc for the inspiration behind this project
