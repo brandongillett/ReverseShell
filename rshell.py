@@ -13,7 +13,7 @@ import server.database as database
 HOST_IP = '127.0.0.1'
 HOST_Port = 90
 LOCAL_DATABASE = 'database.db'
-#test
+
 #main
 def main():
     parser = argparse.ArgumentParser(
