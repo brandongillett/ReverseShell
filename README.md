@@ -9,13 +9,13 @@
 </div>
 
 ---
-
-(Education purpose only) This is a project that I found interesting to demonstrate the use of sockets, threading, and subprocesses in python. Disclaimer this project is in the very early stages of being developed most of the code written was written with the intent to be released at a production level further down the line (especially client scripts).
-    <br> 
-Inspiration/Credit : <a href="https://github.com/malwaredllc/byob">BYOB (Build Your Own Botnet)</a>
-    <br>
-</p>
-
+<h3 align="center">
+  (Education purpose only) This is a project that I found interesting to demonstrate the use of sockets, threading, and subprocesses in python. Disclaimer this project   is in the very early stages of being developed most of the code written was written with the intent to be released at a production level further down the line    (especially client scripts).
+      <br> 
+  Inspiration/Credit : <a href="https://github.com/malwaredllc/byob">BYOB (Build Your Own Botnet)</a>
+      <br>
+  </p>
+</h3>
 ## 📝 Table of Contents
 - [About](#about)
 - [Getting Started](#getting_started)
