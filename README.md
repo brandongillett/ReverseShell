@@ -75,7 +75,7 @@ If you want to install this on a VPS it will be the same as described above just
 ## ⛏️ Built Using <a name = "built_using"></a>
 - [Python3](https://www.python.org/) - Language
 - [Sqlite](https://www.sqlite.org/) - Database
-- [VueJs](https://www.kali.org/) - Operating System
+- [Kali Linux](https://www.kali.org/) - Operating System
 
 ## ✍️ Authors <a name = "authors"></a>
 - [@brandongillett](https://github.com/brandongillett)
