@@ -81,5 +81,5 @@ If you want to install this on a VPS it will be the same as described above just
 - [@brandongillett](https://github.com/brandongillett) - Developer
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
-- [@byob](https://github.com/malwaredllc/byob) - much credit to this repo and @malwaredllc for the inspiration behind this project
+- [@byob](https://github.com/malwaredllc/byob) - Much credit to this repo and @malwaredllc for the inspiration behind this project
 - [@The-Documentation-Compendium](https://github.com/kylelobo/The-Documentation-Compendium) - Documentation behind the README
