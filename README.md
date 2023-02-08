@@ -16,9 +16,9 @@
 
 ---
 
-<p align="center"> (Education purpose only) This is a project that I personally found interesting to demonstrate use of sockets and multiple threading and subprocess methods in python. 
+<p align="center"> (Education purpose only) This is a project that I personally found interesting to demonstrate use of sockets, threading, and subprocess methods in python. 
     <br> 
-Insperation/Credit : <a href="https://github.com/malwaredllc/byob">BYOB (Build Your Own Botnet)</a>
+Inspiration/Credit : <a href="https://github.com/malwaredllc/byob">BYOB (Build Your Own Botnet)</a>
 </p>
 
 ## 📝 Table of Contents
@@ -33,8 +33,7 @@ Insperation/Credit : <a href="https://github.com/malwaredllc/byob">BYOB (Build Y
 - [Acknowledgments](#acknowledgement)
 
 ## 🧐 About <a name = "about"></a>
-Write about 1-2 paragraphs describing the purpose of your project.
-
+The purpose of this project is to help junior developers understand sockets in a fun way that they could have possibly learned in cyber security classes(such as i did). The use of threading and subprocesses is something that is demonstrated here as well which makes this a great introduction to cyber security/operating systems for many developers looking to get educated in these fields. Also with many features for the host such as informations on existing clients also demonstrates the use of databases in SQLite.
 ## 🏁 Getting Started <a name = "getting_started"></a>
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
