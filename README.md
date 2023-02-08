@@ -10,7 +10,7 @@
 
 ---
 
-<p align="center"> (Education purpose only) This is a project that I personally found interesting to demonstrate use of sockets, threading, and subprocess methods in python. 
+<p align="center"> (Education purpose only) This is a project that I personally found interesting to demonstrate use of sockets, threading, and subprocesses in python. Disclamer this project is in the very early stages of being developed most of the code written was written with intent be be released at a production level further down the line (especiall client scripts).
     <br> 
 Inspiration/Credit : <a href="https://github.com/malwaredllc/byob">BYOB (Build Your Own Botnet)</a>
 </p>
@@ -57,34 +57,23 @@ sudo python3 client.py
 ```
 
 
-## 🔧 Running the tests <a name = "tests"></a>
-Explain how to run the automated tests for this system.
-
-### Break down into end to end tests
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-Explain what these tests test and why
-
-```
-Give an example
-```
-
 ## 🎈 Usage <a name="usage"></a>
-Add notes about how to use the system.
+Once you have the host system setup (VPS or Local) and the client is connected, you are now able to reverse shell using the commands created.
+
+To find the commands:
+
+```
+help [optional command]
+```
+
 
 ## 🚀 Deployment <a name = "deployment"></a>
-Add additional notes about how to deploy this on a live system.
+If you want to install this on a VPS it will be the same as described above just make sure you have the correct ports open and change the IP address in the settings found at the top of the rshell.py script.
 
 ## ⛏️ Built Using <a name = "built_using"></a>
-- [MongoDB](https://www.mongodb.com/) - Database
-- [Express](https://expressjs.com/) - Server Framework
-- [VueJs](https://vuejs.org/) - Web Framework
-- [NodeJs](https://nodejs.org/en/) - Server Environment
+- [Python3](https://www.python.org/) - Language
+- [Sqlite](https://www.sqlite.org/) - Database
+- [VueJs](https://www.kali.org/) - Operating System
 
 ## ✍️ Authors <a name = "authors"></a>
 - [@brandongillett](https://github.com/brandongillett)
