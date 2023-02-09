@@ -12,23 +12,12 @@ class data:
         except:
             pass
 
-    def num(self):
-        conn = sqlite3.connect(self.db)
-        c = conn.cursor()
-        c.execute('''SELECT * FROM clients''')
-        results = c.fetchall()
-        clients = len(results)
-        return clients
-
     def populate(self):
         conn = sqlite3.connect(self.db)
         c = conn.cursor()
         c.execute('''SELECT * FROM clients''')
         results = c.fetchall()
         clients = []
-        uuidlist = []
-        hostlist = []
-        nicklist = []
         for item in results:
             cli = []
             cli.append((socket.socket()))
@@ -37,12 +26,9 @@ class data:
             nickname = item[2]
             uuid = item[3]
             info = {'hostname':hostname,'nickname':nickname,'uuid':uuid}
-            uuidlist.append(uuid)
-            hostlist.append(hostname)
-            nicklist.append(nickname)
             cli.append(info)
             clients.append(cli)
-        return(clients,uuidlist,hostlist,nicklist)
+        return clients
 
     def update(self,client):
         conn = sqlite3.connect(self.db)

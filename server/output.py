@@ -1,7 +1,6 @@
 import colorama
 from colorama import Fore
 
-
 def banner():
     LOGO = """
  ______    _______  __   __  _______  ___      ___
