@@ -15,7 +15,6 @@ HOST_IP = '127.0.0.1'
 HOST_Port = 90
 LOCAL_DATABASE = 'database.db'
 
-
 #main
 def main():
     db = database.data(LOCAL_DATABASE)
