@@ -9,6 +9,7 @@ from difflib import get_close_matches
 import server.output as output
 import server.database as database
 
+#VERSION 1.1
 ## Variables
 HOST_IP = '127.0.0.1'
 HOST_Port = 90
