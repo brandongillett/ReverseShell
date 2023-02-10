@@ -1,6 +1,9 @@
 import sqlite3
 import socket
 
+#same order as table columns (not including ip, gets added from socket)
+elements = ('hostname','nickname','uuid')
+
 class data:
     def __init__(self,db):
         # Connect/Create to database and create table if not existed
@@ -8,7 +11,7 @@ class data:
         conn = sqlite3.connect(self.db)
         c = conn.cursor()
         try:
-            c.execute('''CREATE TABLE IF NOT EXISTS clients(ip VARCHAR(100),name VARCHAR(100),nickname VARCHAR(100),uuid VARCHAR(100) PRIMARY KEY)''')
+            c.execute('''CREATE TABLE IF NOT EXISTS clients(ip VARCHAR(100),hostname VARCHAR(100),nickname VARCHAR(100),uuid VARCHAR(100) PRIMARY KEY)''')
         except:
             pass
 
@@ -22,10 +25,9 @@ class data:
             cli = []
             cli.append((socket.socket()))
             cli.append((item[0],0))
-            hostname = item[1]
-            nickname = item[2]
-            uuid = item[3]
-            info = {'hostname':hostname,'nickname':nickname,'uuid':uuid}
+            info = {}
+            for i in range(1,len(item)):
+                info.update({elements[i-1]:item[i]})
             cli.append(info)
             clients.append(cli)
         return clients
@@ -33,34 +35,31 @@ class data:
     def update(self,client):
         conn = sqlite3.connect(self.db)
         c = conn.cursor()
+        #values to update
         ip = client[1][0]
-        name = client[2]['hostname']
-        c.execute('''SELECT nickname FROM clients WHERE uuid=?''',(client[2]['uuid'],))
-        results = c.fetchall()
-        nickname = results[0][0]
-        c.execute('''UPDATE clients SET ip = ?, name = ? WHERE uuid=?''',(ip,name,client[2]['uuid'],))
-        conn.commit()
-        return nickname
-        
-    def setnick(self,client):
-        conn = sqlite3.connect(self.db)
-        c = conn.cursor()
-        nickname = client[2]['nickname']
-        c.execute('''UPDATE clients SET nickname = ? WHERE uuid=?''',(nickname,client[2]['uuid'],))
+        hostname = client[2]['hostname']
+        c.execute('''UPDATE clients SET ip = ?, hostname = ? WHERE uuid=?''',(ip,hostname,client[2]['uuid']))
         conn.commit()
 
     def new(self,client):
         conn = sqlite3.connect(self.db)
         c = conn.cursor()
-        ip = client[1][0]
-        name = client[2]['hostname']
-        nickname = client[2]['nickname']
-        uuid = client[2]['uuid']
-        c.execute('''INSERT INTO clients VALUES(?,?,?,?)''',(ip,name,nickname,uuid))
+        info = [client[1][0]]
+        for i in client[2]:
+            info.append(client[2][i])
+        print(info)
+        c.execute('''INSERT INTO clients VALUES(?,?,?,?)''',info)
         conn.commit()
 
     def remove(self,client):
         conn = sqlite3.connect(self.db)
         c = conn.cursor()
         c.execute('''DELETE FROM clients WHERE uuid=?''',(client[2]['uuid'],))
+        conn.commit()
+
+    def setnick(self,client):
+        conn = sqlite3.connect(self.db)
+        c = conn.cursor()
+        nickname = client[2]['nickname']
+        c.execute('''UPDATE clients SET nickname = ? WHERE uuid=?''',(nickname,client[2]['uuid'],))
         conn.commit()

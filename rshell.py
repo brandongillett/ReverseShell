@@ -114,7 +114,8 @@ class server():
                 #determine if exists in list already if it does replace it if it doesnt create new and print message
                 elif(pos := self.findcli('uuid',uuid)) != -1:
                     #set nickname since it exists and update database information with ip and computer name
-                    newcli[2]['nickname'] = self.database.update(newcli)
+                    self.database.update(newcli)
+                    newcli[2]['nickname'] = self.clients[pos][2]['nickname']
                     self.clients[pos] = newcli
                 else:
                     output.echo('\n\n[+]','GREEN')
@@ -161,8 +162,6 @@ class server():
                         killed = True
                     except:
                         self.endconn()
-                        output.echo('\n[!]','RED')
-                        output.echo(' connection ended\n','WHITE')
                     break
                 elif inp.lower() == 'n':
                     output.echo('\n','WHITE')
@@ -198,8 +197,6 @@ class server():
                 print(self.clients[self.cur][0].recv(1024).decode())
             except:
                 self.endconn()
-                output.echo('\n[!]','RED')
-                output.echo(' connection ended\n','WHITE')
 
     def sendcommand(self,cmd):
         #check if not connected
@@ -228,6 +225,7 @@ class server():
             client.send('connectionstatus'.encode())
             time.sleep(.001)
             client.send('connectionstatus'.encode())
+            time.sleep(.001)
             return True
         except:
             return False
@@ -244,7 +242,7 @@ class server():
             output.echo(' no search results\n','WHITE')
             output.echo('\n','WHITE')
         else:
-            output.echo('\n{:<5}{:<20}{:<20}{:<20}{:<8}'.format('id','name','nickname','ip-address','status'),'MAGENTA')
+            output.echo('\n{:<5}{:<20}{:<20}{:<20}{:<8}'.format('id','hostname','nickname','ip-address','status'),'MAGENTA')
             for x in results:
                 client = self.clients[x]
                 output.echo('\n\n{:<5}{:<20}{:<20}{:<20}'.format(x,client[2]['hostname'],client[2]['nickname'],client[1][0]),'WHITE')
@@ -296,7 +294,7 @@ class server():
 
     def listclients(self,type='none'):
         count = 0
-        output.echo('\n{:<5}{:<20}{:<20}{:<20}{:<8}'.format('id','name','nickname','ip-address','status'),'MAGENTA')
+        output.echo('\n{:<5}{:<20}{:<20}{:<20}{:<8}'.format('id','hostname','nickname','ip-address','status'),'MAGENTA')
         if type.lower() == 'online':
             for item in self.clients:
                 if self.isOnline(item[0]):
