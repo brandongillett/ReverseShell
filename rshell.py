@@ -5,7 +5,7 @@ import socket
 import threading
 from colorama import Fore
 from difflib import get_close_matches
-
+#V1.1
 import server.output as output
 import server.database as database
 
