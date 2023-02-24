@@ -18,7 +18,7 @@
       <br>
   </p>
   </h3>
-<img src="https://user-images.githubusercontent.com/82180479/221098267-600c4b61-2e4f-450b-bf63-7c01c710dd86.png" alt="Girl in a jacket" width="500" height="600">
+<img src="https://user-images.githubusercontent.com/82180479/221098267-600c4b61-2e4f-450b-bf63-7c01c710dd86.png" alt="Girl in a jacket" width="1200" height="600">
   
 ## 📝 Table of Contents
 - [About](#about)
