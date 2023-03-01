@@ -45,7 +45,7 @@ sudo apt install python3
 ### Prerequisites
 None at the moment. (As newer versions get released requirements.txt might be in place).
 
-### Installing
+### Running
 After downloading the repository to get this running you do not need much as the client script is currently hardcoded and will be implemented for users to create custom scripts.  
 Just run the rshell.py with python3 with admin privileges.
 
