@@ -12,16 +12,32 @@ def banner():
 |___|  |_||_______||__| |__||_______||_______||_______|
     """
     echo(LOGO,'MAGENTA')
-    echo('\n','WHITE')
 
-def echo(input,color):
-    if color == 'RED':
-        print(Fore.RED + input, end = '')
-    if color == 'GREEN':
-        print(Fore.GREEN + input, end = '')
-    if color == 'BLUE':
-        print(Fore.BLUE + input, end = '')
-    if color == 'MAGENTA':
-        print(Fore.MAGENTA + input, end = '')
-    if color == 'WHITE':
-        print(Fore.WHITE + input, end = '')
+def echo(input,color,type="",newline=""):
+    COLORS = {
+        'RED': Fore.RED,
+        'GREEN': Fore.GREEN,
+        'BLUE': Fore.BLUE,
+        'MAGENTA': Fore.MAGENTA,
+        'WHITE': Fore.WHITE
+    }
+
+    TYPES = {
+        'WARNING': Fore.RED +'[!]',
+        'SUCCESS': Fore.GREEN +'[✓]',
+        'ADDED': Fore.GREEN +'[+]',
+        'EXIT': Fore.RED + '[X]'
+    }
+    text = COLORS.get(color, Fore.RESET) + input
+    type_prefix = TYPES.get(type, '')
+
+    text = f"{Fore.RESET}{type_prefix} {text}" if type_prefix else text
+
+    if newline == "FIRST":
+        text = '\n' + text
+    elif newline == "LAST":
+        text = text + '\n'
+    else:
+        text = '\n' + text + '\n'
+
+    print(text)

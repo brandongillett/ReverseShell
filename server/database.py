@@ -47,7 +47,6 @@ class data:
         info = [client[1][0]]
         for i in client[2]:
             info.append(client[2][i])
-        print(info)
         c.execute('''INSERT INTO clients VALUES(?,?,?,?)''',info)
         conn.commit()
 
