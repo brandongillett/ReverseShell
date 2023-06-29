@@ -31,10 +31,16 @@ def generate(hostIP='localhost',hostPORT=1024,name="client",peristence=False):
                 source = source + content
 
         source = '\n'.join(sorted(list(packages))) + '\n' + source
-        os.chdir('../builds')
+        buildPath = '../build'
+        try:
+            os.mkdir(buildPath)
+        except FileExistsError:
+            pass
+        os.chdir(buildPath)
         with open(name+'.py', 'w') as file:
             file.write(source)
         os.chdir('../..')
         return True
     except:
+        print(e1)
         return False
