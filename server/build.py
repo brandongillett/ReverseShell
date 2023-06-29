@@ -42,5 +42,4 @@ def generate(hostIP='localhost',hostPORT=1024,name="client",peristence=False):
         os.chdir('../..')
         return True
     except:
-        print(e1)
         return False
